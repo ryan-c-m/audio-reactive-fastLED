@@ -7,7 +7,8 @@
 #define DATA_PIN 6
 #define AMP_PIN A0
 #define LPF_HZ 150
-#define BRIGHTNESS 20
+#define BRIGHTNESS 50
+#define SAMPLE_WINDOW 80
 
 struct Color {
   uint8_t r; // Red
