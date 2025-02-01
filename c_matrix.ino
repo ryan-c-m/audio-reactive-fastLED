@@ -4,13 +4,13 @@
 
 CRGB leds[NUM_LEDS];
 
-lowpass_filter my_filter_1(150);
+lowpass_filter my_filter_1(LPF_HZ);
 lowpass_filter my_filter_2; 
 
 void setup() {
   Serial.begin(9600);
   FastLED.addLeds<WS2812, DATA_PIN, GRB>(leds, NUM_LEDS);
-  FastLED.setBrightness(50);
+  FastLED.setBrightness(BRIGHTNESS);
   for (int i = 0; i < dataSize; i++) {
       leds[data[i].num] = data[i].color;
   }
@@ -20,7 +20,22 @@ void setup() {
 const int sampleWindow = 50;
 int floori = 10;
 int ceili = 20;
-int const AMP_PIN = A0;    
+
+void updateLEDArray(int* ledArray, int arraySize, int v, CRGB highColor, CRGB lowColor, int fade) {
+  for (int i = 0; i < arraySize; i++) {
+    int ledIndex = ledArray[i];
+    if (v > 50) {
+      leds[ledIndex] = CRGB(highColor.r * v / 255, highColor.g * v / 255, highColor.b * v / 255);
+    } else {
+      leds[ledIndex].nscale8(fade);
+    }
+  }
+}
+
+void updateLEDs(int v) {
+  updateLEDArray(flash_leds, flashSize, v, CRGB(random(30, 60), random(100, 140), random(100, 150)), CRGB::Black, 10);
+  updateLEDArray(eye, eyeSize, v, CRGB(200, 220, 120), CRGB::Black, 230);
+}
 
 void loop() {
   unsigned long startMillis = millis();
@@ -63,23 +78,8 @@ void loop() {
   // Scale latest amplitude to known floor and ceiling values
   int v = constrain(map(peakToPeak, floori, ceili, 1, 255), 1, 255);
 
-  for (int i = 0; i < 63; i++) {
-      int ledIndex = flash_leds[i];
-      if (v > 50) {
-        leds[ledIndex] = CRGB(random(30,50) * v / 255, random(120,140) * v / 255, random(120,150) * v / 255);
-      } else {
-        leds[ledIndex].nscale8(random(10, 254));
-      }
-  }
-
-  for (int i = 0; i < 6; i++) {
-    int ledIndex = eye[i];
-    if (v > 50) {
-        leds[ledIndex] = CRGB(60 * v / 255, 220 * v / 255, 120 * v / 255);
-    } else {
-        leds[ledIndex].nscale8(5);
-    }
-  }
+  updateLEDs(v);
+  
   leds[0] = CRGB(0,0,0);
   FastLED.show();
 }

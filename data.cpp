@@ -137,8 +137,9 @@ int flash_leds[] = {
     145, 142, 113, 110, 81, 220, 228, 250, 230, 218, 196, 188, 249
 };
 
-int flashSize = sizeof(flash_leds);
+int flashSize = sizeof(flash_leds) / sizeof(flash_leds[0]);
 
 int eye[] = {
     152, 103, 151, 168, 104, 87
 };
+int eyeSize = sizeof(eye) / sizeof(eye[0]);
