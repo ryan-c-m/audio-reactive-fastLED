@@ -5,27 +5,21 @@
 
 #define NUM_LEDS 256
 #define DATA_PIN 6
-#define AMP_PIN A0
+#define AMP_PIN A1
 #define LPF_HZ 80
-#define BRIGHTNESS 80
+#define BRIGHTNESS 200
 #define SAMPLE_WINDOW 10
-#define BEAT_THRESHOLD 0.5
-
-struct Color {
-  uint8_t r; // Red
-  uint8_t g; // Green
-  uint8_t b; // Blue
-};
+#define BEAT_THRESHOLD 0.6
 
 struct Data {
-  int num;      // LED number
+  uint8_t num;      // LED number
   CRGB color;   // Color of the LED
 };
 
-extern Data data[];
+extern Data data_group_1[];
 extern int dataSize;
-extern int flash_leds[];
+extern Data flash_leds[];
 extern int flashSize;
-extern int eye[];
+extern Data eye[];
 extern int eyeSize;
 #endif
